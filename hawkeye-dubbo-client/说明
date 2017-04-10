@@ -1,0 +1,30 @@
+使用步聚：
+1.在你的工程里新增切入点，com.avengers.hawkeye.pointcut.TraceMethodPointcut，注意类名和方法名保持原样，只需改下@Pointcut规则：
+public class TraceMethodPointcut {
+    @Pointcut("execution(* com.JLA.trade.*..*(..))")
+    public void traceMethodPointcut() {}
+}
+
+2.在SpringBoot启动类中的@ComponentScan加入com.avengers.hawkeye的扫描：
+@Configuration
+@ComponentScan(basePackages = {"com.avengers.hawkeye"})
+@EnableAutoConfiguration
+@ImportResource({"classpath:dubbo-all.xml"})
+public class SpringBootTradeApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootTradeApplication.class);
+    }
+}
+
+3.在业务调用入口处（一般都是Controller）执行TraceContext.start()方法即可，如：
+@RestController
+@RequestMapping("/trade")
+public class TradeController {
+    @RequestMapping("/{id}")
+    public String view(@PathVariable("id") String id) {
+        TraceContext.start();
+        return "RestController run success:" + id;
+    }
+
+}

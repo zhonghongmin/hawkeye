@@ -1,0 +1,1 @@
+dubboTraceInterceptor=com.avengers.hawkeye.interceptor.DubboTraceInterceptor

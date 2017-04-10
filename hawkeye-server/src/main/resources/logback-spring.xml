@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-->
+    <!-- 以下是配置性能日志跟踪的，不要修改-->
+    <property name="LOG_PATH" value="/logs/hawkeye-server" />
+
+    <appender name="TRACE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/trace.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/trace.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder><!-- 必须指定，否则不会往文件输出内容 -->
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %n%msg%n</pattern>
+        </encoder>
+        <prudent>false</prudent>
+    </appender>
+
+    <logger name="TRACE_LOGGER" level="DEBUG" >
+        <appender-ref ref="TRACE_APPENDER" />
+    </logger>
+
+    <springProfile name="test,dev">
+        <logger name="TRACE_APPENDER" level="DEBUG"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="TRACE_APPENDER" level="INFO"/>
+    </springProfile>
+    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+
+
+</configuration>
